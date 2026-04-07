@@ -1,0 +1,176 @@
+# NOTE: Para rutas que modifican/eliminan juegos o comentarios debes indicar qué usuario realiza la acción.
+# Puedes pasar userId en el body (JSON) o como query param ?userId=1.
+El middleware checkAuthor usa cualquiera de los dos.
+
+### Autenticación 🔑
+# Registro de un nuevo usuario
+POST http://localhost:3001/auth/register
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "nombre": "Test User",
+  "contraseña": "1234567"
+}
+
+###
+# Inicio de sesión (Login)
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "test2@gmail.com",
+  "contraseña": "1234567"
+}
+
+###
+# Obtener información del usuario autenticado (requiere JWT)
+GET http://localhost:3001/auth/me
+Authorization: Bearer TokenUsuarioAquí
+---
+
+### Usuarios (CRUD) 🧑‍💻
+# Crear un nuevo usuario
+POST http://localhost:3001/usuarios
+Content-Type: application/json
+
+{
+  "email": "b@domdas.cos",
+  "nombre": "Juansito",
+  "contraseña": "1234567"
+}
+
+###
+# Obtener todos los usuarios
+GET http://localhost:3001/usuarios
+
+###
+# Obtener un usuario por ID
+GET http://localhost:3001/usuarios/1
+
+###
+# Actualizar un usuario por ID
+PUT http://localhost:3001/usuarios/1
+Content-Type: application/json
+
+{
+  "nombre": "ActuTest",
+  "contraseñaActual": "1234567",
+  "contraseñaNueva": "7654321"
+}
+
+###
+# Eliminar un usuario por ID
+DELETE http://localhost:3001/usuarios/1
+
+---
+
+### Juegos (CRUD) 🎮
+# Nota: para subir archivos usa curl/Postman;
+
+
+# Crear juego sin archivo (JSON) - incluye userId en body, esto no se puede
+# ya que se necesita el archivo zip para crear el juego.
+# y no se puede enviar por el request.http ya que este no soporta archivos.
+POST http://localhost:3001/juegos
+Content-Type: application/json
+Authorization: Bearer TokenUsuarioAquí
+{
+  "titulo": "Otro Juego",
+  "descripcion": "Descripción larga del juego...",
+  "userId": 2
+}
+
+###
+# Obtener todos los juegos
+GET http://localhost:3001/juegos
+
+###
+# Obtener un juego por ID
+GET http://localhost:3001/juegos/1
+
+###
+# Actualizar juego: incluye userId en body (o puedes añadir ?userId=1 en la URL)
+PUT http://localhost:3001/juegos/2
+Content-Type: application/json
+Authorization: Bearer TokenUsuarioAquí
+
+{
+  "titulo": "Nuevo Titulo",
+  "descripcion": "Nueva descripción"
+}
+
+###
+# Eliminar juego (pasa userId para checkAuthor) - usa query param
+DELETE http://localhost:3001/juegos/1
+Authorization: Bearer TokenUsuarioAquí
+---
+
+### Estadísticas (Stats) 📊
+# Registrar/Actualizar estadísticas para un juego y usuario
+POST http://localhost:3001/stats/1
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "hours": 2
+}
+
+###
+# Obtener estadísticas de un juego
+GET http://localhost:3001/stats/1
+
+###
+# Obtener estadísticas de un juego para un usuario específico (opcional)
+GET http://localhost:3001/stats/1?userId=1
+
+---
+
+### Comentarios (CRUD) 💬
+# Crear comentario (incluye userId y gameId en body)
+POST http://localhost:3001/comentarios
+Content-Type: application/json
+Authorization: Bearer TokenUsuarioAquí
+{
+  "gameId": 1,
+  "dificultad": 2,
+  "calidad": 3,
+  "texto": "Mid juego",
+  "script": "<optional script/text>"
+}
+
+###
+# Obtener todos los comentarios de un juego
+GET http://localhost:3001/comentarios/game/1
+
+###
+# Obtener un comentario por ID
+GET http://localhost:3001/comentarios/1
+
+###
+# Actualizar comentario: incluye userId en body (o usar ?userId=1)
+PUT http://localhost:3001/comentarios/3
+Content-Type: application/json
+Authorization: Bearer TokenUsuarioAquí
+{
+  "texto": "Texto editado",
+  "calidad": 5,
+  "dificultad": 4
+}
+
+###
+# Eliminar comentario (pasa userId para checkCommentAuthor) - usa body
+DELETE http://localhost:3001/comentarios/3
+Content-Type: application/json
+Authorization: Bearer TokenUsuarioAquí
+
+{
+  "userId": 3
+}
+
+
+### Notas Adicionales
+# - Deja una línea vacía entre cabeceras y body (ya está hecho).
+# - Para uploads (.zip) usa curl:
+#   curl -X POST http://localhost:3001/juegos -F "titulo=Mi Juego" -F "descripcion=Desc" -F "userId=1" -F "archivo=@/ruta/al/archivo.zip"
+# - Asegúrate de que el servidor esté corriendo en localhost:3001 antes de ejecutar

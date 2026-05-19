@@ -4,11 +4,8 @@ services:
   backend:
     build: ./backend          # Usa el Dockerfile que está en /backend
     container_name: backend
-    ports:
-      - "3001:3001"           # Expone el puerto para desarrollo/debug
     environment:
       - NODE_ENV=production
-      - PORT=3001
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/database.sqlite:/app/database.sqlite

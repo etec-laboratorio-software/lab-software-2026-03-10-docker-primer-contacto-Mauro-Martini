@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize';
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: './database.sqlite',
+  storage: './data/database.sqlite',
   logging: console.log,  // ← Mostrar consultas SQL en consola
   define: {
     timestamps: true     // ← Agregar createdAt/updatedAt automáticamente

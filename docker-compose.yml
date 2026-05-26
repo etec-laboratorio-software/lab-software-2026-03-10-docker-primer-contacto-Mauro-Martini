@@ -1,19 +1,18 @@
 services:
-
-  # ── Backend (Node.js) ────────────────────────────────────────────────────────
+  # ── Backend (Node.js) ──────────────────────────────────────────────────────
   backend:
-    build: ./backend          # Usa el Dockerfile que está en /backend
+    build: ./backend
     container_name: backend
     environment:
       - NODE_ENV=production
     volumes:
       - ./backend/uploads:/app/uploads
-      - ./backend/database.sqlite:/app/database.sqlite
+      - ./backend/data:/app/data        # ← era ./backend/database.sqlite:/app/database.sqlite
     networks:
       - app-network
     restart: unless-stopped
 
-  # ── Frontend (React → Nginx) ──────────────────────────────────────────────────
+  # ── Frontend (React → Nginx) ───────────────────────────────────────────────
   frontend:
     build: ./frontend
     container_name: frontend
@@ -24,6 +23,7 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+
 # Red interna para que los contenedores se comuniquen entre sí
 networks:
   app-network:
